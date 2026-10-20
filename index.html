@@ -31,11 +31,18 @@
         </div>
       </div>
 
-      <!-- Language Selector -->
-      <div class="flex items-center space-x-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-xs font-medium">
-        <button onclick="setLanguage('en')" id="btn-en" class="px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition">EN</button>
-        <button onclick="setLanguage('mr')" id="btn-mr" class="px-2.5 py-1 rounded text-slate-300 hover:text-white transition">मराठी</button>
-        <button onclick="setLanguage('hi')" id="btn-hi" class="px-2.5 py-1 rounded text-slate-300 hover:text-white transition">हिन्दी</button>
+      <!-- Controls: API Key & Language -->
+      <div class="flex items-center space-x-2">
+        <button onclick="openKeyModal()" title="Connect Live AI" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-amber-300 hover:text-white text-xs flex items-center gap-1">
+          <span>🔑</span>
+          <span class="hidden sm:inline" id="key-btn-text">AI Mode</span>
+        </button>
+
+        <div class="flex items-center space-x-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-xs font-medium">
+          <button onclick="setLanguage('en')" id="btn-en" class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold transition">EN</button>
+          <button onclick="setLanguage('mr')" id="btn-mr" class="px-2 py-0.5 rounded text-slate-300 hover:text-white transition">मराठी</button>
+          <button onclick="setLanguage('hi')" id="btn-hi" class="px-2 py-0.5 rounded text-slate-300 hover:text-white transition">हिन्दी</button>
+        </div>
       </div>
     </div>
   </header>
@@ -43,7 +50,7 @@
   <!-- Literature Badges Banner -->
   <div class="bg-amber-950/20 border-b border-amber-900/20 py-1.5 px-4 text-center">
     <p class="text-[11px] text-amber-300/70 truncate max-w-2xl mx-auto" id="sources-banner">
-      Rooted in: Upanishads • Bhagavad Gita • Dnyaneshwari • Vinoba Bhave • Swami Vivekananda
+      Upanishads • Bhagavad Gita • Dnyaneshwari • Vinoba Bhave • Swami Vivekananda
     </p>
   </div>
 
@@ -56,7 +63,7 @@
         <span id="welcome-title">Welcome to Lamppost</span>
       </div>
       <p class="text-xs text-slate-300 leading-relaxed" id="welcome-desc">
-        Ask any dilemma—burnout, anxiety, career decisions, difficult leadership moments, or relationship friction. Lamppost shines the light of pure awareness and practical duty without judgment.
+        Ask any real-world dilemma: burnout, self-doubt, workplace politics, relationship conflicts, or life's purpose. Lamppost provides grounded counsel rooted in non-dual truth.
       </p>
       
       <!-- Preset Prompt Buttons -->
@@ -65,10 +72,13 @@
           💼 Handling workplace burnout & stress
         </button>
         <button onclick="sendPreset(1)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
-          ⚖️ Fear of failure in a new career venture
+          ⚖️ Career confusion & choosing the right path
         </button>
         <button onclick="sendPreset(2)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
           🤝 Resolving personal relationship conflict
+        </button>
+        <button onclick="sendPreset(3)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          💰 Dealing with money & financial anxiety
         </button>
       </div>
     </div>
@@ -80,7 +90,7 @@
       <input 
         type="text" 
         id="user-input" 
-        placeholder="Ask a question about life or work..." 
+        placeholder="Ask a question about life, work, or emotions..." 
         class="flex-1 bg-slate-900 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition"
         onkeydown="if(event.key === 'Enter') handleSend()"
       >
@@ -93,6 +103,27 @@
     </div>
   </footer>
 
+  <!-- API Key Modal -->
+  <div id="key-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-amber-500/30 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="text-base font-bold text-amber-300">🔑 Live AI Configuration</h3>
+        <button onclick="closeKeyModal()" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Lamppost has a built-in wisdom library. To unlock <strong>free, open-ended live AI reasoning</strong> for every possible life query, get a free Gemini API key from <a href="https://aistudio.google.com/" target="_blank" class="text-amber-400 underline">Google AI Studio</a> and paste it below. It stays saved in your browser only.
+      </p>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1">Gemini API Key (Optional)</label>
+        <input type="password" id="api-key-input" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+      </div>
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="clearApiKey()" class="px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-400 hover:text-white">Clear</button>
+        <button onclick="saveApiKey()" class="px-4 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400">Save & Enable</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentLang = 'en';
 
@@ -100,110 +131,156 @@
       en: {
         title: "Lamppost",
         tagline: "Illuminating Life with Non-Dual Wisdom",
-        banner: "Rooted in: Upanishads • Bhagavad Gita • Dnyaneshwari • Vinoba Bhave • Swami Vivekananda",
+        banner: "Upanishads • Bhagavad Gita • Dnyaneshwari • Vinoba Bhave • Swami Vivekananda",
         welcomeTitle: "Welcome to Lamppost",
-        welcomeDesc: "Bring any question about career, ambition, emotional strain, or personal ethics. Lamppost analyzes your situation through the timeless lens of Advaita Vedanta.",
-        placeholder: "Ask a question about life or work...",
+        welcomeDesc: "Bring any question about career, ambition, emotional strain, or personal ethics. Lamppost provides thoughtful Advaita Vedanta perspectives.",
+        placeholder: "Ask a question about life, career, or emotions...",
         send: "Ask",
         presets: [
-          "How can I handle severe workplace burnout and constant deadlines?",
-          "I have a deep fear of failure regarding a major career risk. What should I do?",
-          "How do I deal with ego clashes and anger in close relationships?"
+          "💼 Handling workplace burnout & stress",
+          "⚖️ Career confusion & choosing the right path",
+          "🤝 Resolving personal relationship conflict",
+          "💰 Dealing with money & financial anxiety"
         ]
       },
       mr: {
         title: "दीपस्तंभ (Lamppost)",
         tagline: "अद्वैत वेदांताच्या प्रकाशात जीवनमार्ग",
-        banner: "आधार: उपनिषदे • भगवद्गीता • संत ज्ञानेश्वरांची ज्ञानेश्वरी • विनोबा भावे • स्वामी विवेकानंद",
+        banner: "उपनिषदे • भगवद्गीता • संत ज्ञानेश्वरांची ज्ञानेश्वरी • विनोबा भावे • स्वामी विवेकानंद",
         welcomeTitle: "दीपस्तंभावर आपले स्वागत आहे",
         welcomeDesc: "कामाचा ताण, भीती, नातेसंबंधांमधील वाद किंवा जीवनाचा खरा उद्देश—कोणताही प्रश्न विचारा. अद्वैत विचारांची स्पष्टता आपल्याला मार्ग दाखवेल.",
-        placeholder: "आपला प्रश्न येथे विचारा...",
+        placeholder: "आपल्या जीवनातील किंवा कामातील प्रश्न येथे विचारा...",
         send: "विचारा",
         presets: [
-          "कामाचा प्रचंड ताण आणि मानसिक थकवा कसा हाताळावा?",
-          "कारकीर्दीत नवीन निर्णय घेताना अपयशाची भीती वाटते, त्यावर काय करावे?",
-          "नातेसंबंधांमधील अहंकार आणि गैरसमज कसे दूर करावेत?"
+          "💼 कामाचा प्रचंड ताण आणि मानसिक थकवा कसा हाताळावा?",
+          "⚖️ कारकीर्दीत योग्य मार्ग कसा निवडावा (स्वधर्म)?",
+          "🤝 नातेसंबंधांमधील अहंकार आणि गैरसमज कसे दूर करावेत?",
+          "💰 पैशांची चिंता आणि आर्थिक तणावावर कशी मात करावी?"
         ]
       },
       hi: {
         title: "दीपस्तंभ (Lamppost)",
         tagline: "अद्वैत वेदान्त के प्रकाश में जीवन मार्गदर्शन",
-        banner: "मूल स्रोत: उपनिषद् • भगवद्गीता • ज्ञानेश्वरी • विनोबा भावे • स्वामी विवेकानन्द",
+        banner: "उपनिषद् • भगवद्गीता • ज्ञानेश्वरी • विनोबा भावे • स्वामी विवेकानन्द",
         welcomeTitle: "दीपस्तंभ में आपका स्वागत है",
         welcomeDesc: "कार्यक्षेत्र का तनाव, निर्णय लेने में असमंजस या व्यक्तिगत उलझनें—कोई भी प्रश्न साझा करें। अद्वैत दर्शन आपको निष्काम कर्म और साक्षी भाव की दृष्टि प्रदान करेगा।",
-        placeholder: "अपना प्रश्न यहाँ लिखें...",
+        placeholder: "जीवन, करियर या मन से जुड़ा प्रश्न यहाँ पूछें...",
         send: "पूछें",
         presets: [
-          "कार्यस्थल पर अत्यधिक तनाव और बर्नआउट को कैसे संभालें?",
-          "करियर में नया कदम उठाते समय असफलता का डर कैसे दूर करें?",
-          "रिश्तों में अहंकार के टकराव और अशांति को कैसे शांत करें?"
+          "💼 कार्यस्थल पर अत्यधिक तनाव और बर्नआउट को कैसे संभालें?",
+          "⚖️ करियर में सही दिशा का चुनाव और कर्तव्य (स्वधर्म)?",
+          "🤝 रिश्तों में अहंकार के टकराव और अशांति को कैसे शांत करें?",
+          "💰 धन की चिंता और आर्थिक असुरक्षा से कैसे निपटें?"
         ]
       }
     };
 
-    const WISDOM_DATABASE = {
-      en: {
-        burnout: {
-          insight: "In Advaita, your true Self (*Atman*) is the unattached witness (*Sakshi*), not the doer overwhelmed by deadlines. Burnout happens when you identify wholly with the role instead of the consciousness behind it.",
-          citation: "• **Bhagavad Gita (2.47)**: *Karmanyevadhikaraste ma phaleshu kadachana* — Your privilege is only in sincere action, never in the fruits.\n• **Acharya Vinoba Bhave (Geeta Pravachane)**: 'Perform your labor like an artist playing an instrument. The moment labor turns into feverish anxiety for results, energy drains.'",
-          action: "1. Treat your workplace tasks as *Seva* (sacred service), not a trial of your human worth.\n2. Dedicate 5 minutes between meetings to close your eyes and practice being the silent observer of your breath."
+    // Rich Built-in Advaita Knowledge Base across 10+ distinct real-life domains
+    const DOMAINS = [
+      {
+        id: "burnout",
+        keywords: ["burnout", "tired", "exhausted", "fatigue", "overwork", "deadlines", "workload", "ताण", "थकवा", "काम", "तनाव", "थकान"],
+        en: {
+          insight: "Burnout happens when you mistake your temporary workplace role for your essential identity. Advaita reminds you that you are the unwearied witness (*Sakshi*), not the anxious doer.",
+          source: "• **Bhagavad Gita (2.47)**: *Karmanyevadhikaraste ma phaleshu kadachana* — Sincere action is your privilege, not obsessive calculation of results.\n• **Acharya Vinoba Bhave (Geeta Pravachane)**: 'Perform your labor like an artist playing an instrument. When work is performed as service without feverish desire, it generates energy instead of draining it.'",
+          action: "1. View work as *Seva* (sacred contribution) rather than a verdict on your personal worth.\n2. Take 5 minutes between intense meetings to close your eyes and anchor your mind in the silent observer of your breath."
         },
-        failure: {
-          insight: "Fear belongs only to the imagined future of the ego. The Upanishads remind us: *Abhayam* (fearlessness) arises when you realize nothing external can add to or diminish your essential completeness (*Purna*).",
-          citation: "• **Swami Vivekananda**: 'Stand up, be bold, be strong! All the power in the universe is within you. You have covered your eyes and cry that it is dark.'\n• **Sant Dnyaneshwar (Dnyaneshwari, Ch. 18)**: 'The mirror reflects both victory and defeat with equal composure without losing its own nature.'",
-          action: "1. Redefine success: The only failure is shrinking back due to egoic fear. Duty boldly performed is victory in itself.\n2. Focus 100% on preparation today; release tomorrow completely."
+        mr: {
+          insight: "कामाचा ताण आणि थकवा तेव्हाच येतो, जेव्हा आपण स्वतःचे मूल्य केवळ कामाच्या यशापयशावर ठरवतो. अद्वैतानुसार तुम्ही केवळ शरीराने काम करणारे नसून, त्यापलीकडचे शांत 'साक्षी' आहात.",
+          source: "• **भगवद्गीता (२.४७)**: 'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन'—केवळ शुद्ध भावनेने कर्म करणे हाच आपला अधिकार आहे.\n• **विनोबा भावे (गीता प्रवचने)**: 'कर्मात आसक्ती नसावी. कर्म हे प्रार्थनेसारखे सहज व्हावे, ओझे वाटू नये.'\n• **ज्ञानेश्वरी**: 'कमळाचे पान पाण्यावर राहूनही ओले होत नाही, तसेच संसारात राहून साक्षी राहावे.'",
+          action: "१. कामाचा ताण आला की २ मिनिटे विचार करा: 'हे काम माझे कर्तव्य आहे, पण हे काम म्हणजेच माझे संपूर्ण अस्तित्व नव्हे.'\n२. फळाच्या चिंतेऐवजी कामाच्या प्रक्रियेवर लक्ष केंद्रित करा."
         },
-        relationships: {
-          insight: "Advaita means 'not-two'. Conflict occurs when the ego insists on separateness and winning. When you see the same underlying consciousness in the other person, anger dissolves into understanding.",
-          citation: "• **Isha Upanishad (Verse 6)**: 'He who sees all beings in the Self, and the Self in all beings, feels no hatred.'\n• **Sant Dnyaneshwar**: 'Hatred cannot be subdued by hatred; it melts only when the heart acts like the sun, giving warmth without conditions.'",
-          action: "1. Before responding in anger, pause for three breaths and observe the emotional impulse as an external wave.\n2. Ask yourself: 'Am I defending truth, or am I defending my small ego?'"
+        hi: {
+          insight: "तनाव तब उत्पन्न होता है जब हम अपने काम को अपना संपूर्ण अस्तित्व मान लेते हैं। अद्वैत सिखाता है कि आप कर्म करने वाले क्षुद्र अहं नहीं, बल्कि अचल 'साक्षी स्वरूप' हैं।",
+          source: "• **भगवद्गीता (२.४७)**: कर्म पर ही तुम्हारा अधिकार है, फल पर कभी नहीं।\n• **विनोबा भावे (गीता प्रवचन)**: 'कर्म को निष्काम बनाएं; सेवा रूपी कर्म मनुष्य को थकाता नहीं, तृप्त करता है.'",
+          action: "१. दिन में दो बार ५ मिनट के लिए मौन रहकर अपनी सांसों को देखें और साक्षी भाव का अभ्यास करें।\n२. काम को बोझ समझने के बजाय वर्तमान का स्वाभाविक कर्तव्य मानें।"
         }
       },
-      mr: {
-        burnout: {
-          insight: "अद्वैतानुसार तुम्ही केवळ शरीराने किंवा पदाने काम करणारे 'कर्ता' नसून, त्या पलीकडचे शांत 'साक्षी' आहात. जेव्हा आपण कामाच्या परिणामांशी स्वतःची किंमत जोडतो, तेव्हा थकवा येतो.",
-          citation: "• **भगवद्गीता (२.४७)**: 'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन'—केवळ शुद्ध मनाने कर्म करणे हाच आपला अधिकार आहे.\n• **विनोबा भावे (गीता प्रवचने)**: 'कर्मात आसक्ती नसावी. कर्म हे प्रार्थनेसारखे सहज व्हावे, ओझे वाटू नये.'\n• **संत ज्ञानेश्वर (ज्ञानेश्वरी)**: 'कमळाचे पान पाण्यावर राहूनही ओले होत नाही, तसेच संसारात राहून साक्षी राहावे.'",
-          action: "१. कामाचा ताण आला की २ मिनिटे डोळे मिटून विचार करा: 'हे काम माझे कर्तव्य आहे, पण हे काम म्हणजेच माझे संपूर्ण अस्तित्व नव्हे.'\n२. फळाची चिंता न करता कामाच्या प्रक्रियेवर लक्ष केंद्रित करा."
+      {
+        id: "career",
+        keywords: ["career", "confus", "job", "decision", "choice", "switch", "path", "goal", "कारकीर्द", "नोकरी", "निर्णय", "मार्ग", "दिशा", "करियर"],
+        en: {
+          insight: "When choosing a career or facing major crossroads, look through the lens of *Svadharma* (your natural, authentic duty aligned with your inherent temperament) rather than chasing borrowed social prestige.",
+          source: "• **Bhagavad Gita (3.35)**: *Shreyan svadharmo vigunah paradharmat svanushthitat* — Far better is one's own natural duty, though imperfect, than an alien path performed perfectly.\n• **Swami Vivekananda**: 'Find out what you were born to do. Be like the banyan tree—deeply rooted in your own ideal, yet spreading shade for everyone.'",
+          action: "1. Audit your motivations: Are you choosing this path out of genuine resonance, or out of fear of what others might think?\n2. Commit fully to the step right in front of you. Clarity emerges through action, not endless rumination."
         },
-        failure: {
-          insight: "अपयशाची भीती केवळ कल्पनेतील अहंकाराला असते. उपनिषद आपल्याला 'अभय' (भीतीमुक्त) होण्याचा संदेश देतात.",
-          citation: "• **स्वामी विवेकानंद**: 'उठा, जागे व्हा आणि ध्येय सिद्ध होईपर्यंत थांबू नका! तुम्ही अनंत शक्तीचे भांडार आहात.'\n• **ज्ञानेश्वरी**: 'ज्याप्रमाणे आकाश वादळामुळे मळत नाही, त्याप्रमाणे आत्म्याची शक्ती कधीही अपयशाने क्षीण होत नाही.'",
-          action: "१. भीती आल्यास स्वतःला सांगा की निर्णय घेणे आणि प्रयत्न करणे हे आपले कर्तव्य आहे; परिणाम नियतीच्या हातात आहे.\n२. अपयशाला अनुभव म्हणून स्वीकारा, स्वतःचा पराभव समजू नका."
+        mr: {
+          insight: "कारकीर्दीचा निर्णय घेताना इतरांची तुलना किंवा सामाजिक दिखावा बाजूला ठेवून आपला 'स्वधर्म' (आपली नैसर्गिक प्रवृत्ती आणि क्षमता) ओळखा.",
+          source: "• **भगवद्गीता (३.३५)**: 'श्रेयान्स्वधर्मो विगुणः परधर्मात्स्वनुष्ठितात्'—आपला स्वाभाविक स्वधर्म आचरणात आणणे हेच श्रेयस्कर आहे.\n• **स्वामी विवेकानंद**: 'तुमच्यामध्ये अनंत क्षमता आहेत. दुसऱ्याचे अंधानुकरण करू नका; स्वतःचा खरा मार्ग निवडा.'",
+          action: "१. स्वतःच्या आवडीची आणि कौशल्याची प्रामाणिक पडताळणी करा.\n२. एकाच वेळी दहा गोष्टींचा विचार न करता हाती घेतलेल्या एका ध्येयावर मन केंद्रित करा."
         },
-        relationships: {
-          insight: "अद्वैताचा अर्थ 'दोन नाही ते'. जेव्हा आपण समोरच्या व्यक्तीला स्वतःहून वेगळे मानतो, तेव्हाच राग आणि वैर निर्माण होते.",
-          citation: "• **ईशोपनिषद**: 'जो सर्व प्राण्यांमध्ये स्वतःला आणि स्वतःमध्ये सर्व प्राण्यांना पाहतो, तो कोणाचाही द्वेष करत नाही.'\n• **संत ज्ञानेश्वर (पसायदान)**: 'जे खळांची व्यंकटी सांडो । तया सत्कर्मीं रती वाढो ।'—सर्वांमधील ईश्वरी अंश ओळखून क्षमाशीलता ठेवावी.",
-          action: "१. वादाच्या वेळी ताबडतोब उत्तर न देता आधी समोरच्या व्यक्तीची भूमिका समजून घ्या.\n२. अहंकार जिंकवण्यापेक्षा नाते आणि मानसिक शांतता जपणे महत्त्वाचे माना."
+        hi: {
+          insight: "करियर और जीवन के दोराहे पर निर्णय लेते समय 'स्वधर्म' का विचार करें। दूसरों की सफलता की नकल करने से भीतर कभी शांति नहीं मिल सकती।",
+          source: "• **भगवद्गीता (३.३५)**: अपने स्वधर्म का पालन करना दूसरों के धर्म का अनुकरण करने से कहीं अधिक श्रेष्ठ है।\n• **स्वामी विवेकानन्द**: 'अपने भीतर की दिव्य शक्ति को पहचानो और अपने चुने हुए सत्य के प्रति निष्ठावान रहो.'",
+          action: "१. निर्णय लेते समय सोचें कि कौन सा मार्ग आपकी अंतरात्मा को संतोष देता है, केवल दिखावे को नहीं।\n२. कर्म में तत्पर रहें, संशय से बाहर निकलें।"
         }
       },
-      hi: {
-        burnout: {
-          insight: "अद्वैत वेदान्त सिखाता है कि आप केवल दौड़ते हुए विचार या पद नहीं हैं, बल्कि शांत 'साक्षी स्वरूप' हैं। तनाव तब उत्पन्न होता है जब हम कर्म के फल से अपनी पहचान बांध लेते हैं।",
-          citation: "• **भगवद्गीता (२.४७)**: कर्म पर ही तुम्हारा अधिकार है, फल पर कभी नहीं।\n• **विनोबा भावे (गीता प्रवचन)**: 'कर्म को निष्काम बनाएं; जैसे सूर्य बिना किसी आशा के समस्त जगत को प्रकाश देता है, वैसे ही अपने कर्म को सेवा मानें.'\n• **ज्ञानेश्वरी**: 'पानी में तैरता हुआ कमल पत्र जल से अछूता रहता है, वैसे ही संसार में साक्षी भाव से जिएं.'",
-          action: "१. दिन में दो बार ५ मिनट के लिए मौन रहकर अपनी सांसों को देखें और साक्षी भाव का अभ्यास करें।\n२. काम को बोझ समझने के बजाय उसे अपनी स्वाभाविक योग्यता का अर्पण समझें।"
+      {
+        id: "relationships",
+        keywords: ["relationship", "ego", "anger", "fight", "conflict", "wife", "husband", "friend", "colleague", "partner", "नाते", "वाद", "भांडण", "राग", "अहंकार", "मित्र", "रिश्ते", "गुस्सा", "विवाद"],
+        en: {
+          insight: "Advaita means 'not-two'. Relational friction happens when the separate ego insists on being right. When you perceive that the same consciousness dwells in the other person, anger gives way to genuine understanding.",
+          source: "• **Isha Upanishad (Verse 6)**: 'He who sees all beings in the Self, and the Self in all beings, feels no hatred.'\n• **Sant Dnyaneshwar (Amritanubhav)**: 'The ocean waves may clash with one another, yet they are all nothing but water. In non-duality, forgiveness is merely acknowledging our shared essence.'",
+          action: "1. In moments of heated debate, pause for three breaths before speaking. Ask: 'Am I defending truth, or am I defending my ego?'\n2. Listen deeply without formulating your counter-argument while the other person speaks."
         },
-        failure: {
-          insight: "असफलता का भय केवल अहंकार का भ्रम है। उपनिषद हमें 'अभय' का आह्वान करते हैं, क्योंकि आत्म-तत्व कभी घटता या बढ़ता नहीं है।",
-          citation: "• **स्वामी विवेकानन्द**: 'उठो, जागो और तब तक मत रुको जब तक लक्ष्य प्राप्त न हो जाए। समस्त ब्रह्मांड की शक्ति तुम्हारे भीतर है.'\n• **मुण्डक उपनिषद्**: 'सत्यमेव जयते नानृतम्'—सत्य और निष्ठा के मार्ग पर चलने वाले की कभी वास्तविक पराजय नहीं होती।",
-          action: "१. परिणाम की चिंता छोड़कर वर्तमान कर्म में १००% एकाग्रता लगाएं।\n२. विफलता को अंत नहीं, बल्कि सीखने का एक अवसर समझें।"
+        mr: {
+          insight: "अद्वैताचा अर्थ 'दोन नाही ते'. जेव्हा अहंकार जिंकण्याचा हट्ट धरतो, तेव्हाच नात्यांमध्ये कटुता येते. समोरच्या व्यक्तीमध्येही तोच ईश्वरी अंश आहे हे जाणले की राग शांत होतो.",
+          source: "• **ईशोपनिषद**: 'जो सर्व भूतांमध्ये आत्म्याला आणि आत्म्यात सर्व भूतांना पाहतो, तो कोणाचाही द्वेष करत नाही.'\n• **संत ज्ञानेश्वर (पसायदान)**: 'जे खळांची व्यंकटी सांडो । तया सत्कर्मीं रती वाढो । भूतां परस्परे पडो । मैत्र जीवाचें ॥'",
+          action: "१. वादाच्या वेळी ताबडतोब प्रतिक्रिया न देता थोडा वेळ शांत राहा.\n२. स्वतःचा अहंकार जिंकवण्यापेक्षा नाते आणि अंतर्मनाची शांती जपणे महत्त्वाचे माना."
         },
-        relationships: {
-          insight: "अद्वैत का अर्थ है 'अभेद'। जब तक हम दूसरे को स्वयं से पृथक देखते हैं, तब तक क्रोध और भय बना रहता है।",
-          citation: "• **ईशोपनिषद्**: 'जो सब भूतों को आत्म-भाव से देखता है, वह किसी से घृणा नहीं करता.'\n• **संत ज्ञानेश्वर**: 'हृदय में करुणा का दीपक जलाएं, अहंकार को मिटाने से ही वास्तविक सामंजस्य सम्भव है.'",
-          action: "१. वाद-विवाद के क्षण में मौन का सहारा लें और अपनी प्रतिक्रिया को थोड़ा विराम दें।\n२. स्वयं से पूछें: 'क्या मैं सत्य की रक्षा कर रहा हूँ या केवल अपने अहंकार की?'"
+        hi: {
+          insight: "संबंधों में अशांति का मुख्य कारण अहंकार और 'स्व-पर' (मेरा और तेरा) का भाव है। जब आप दूसरे में भी वही चैतन्य देखते हैं, तो घृणा और क्रोध का स्थान करुणा ले लेती है।",
+          source: "• **ईशोपनिषद्**: जो सभी जीवों को आत्मभाव से देखता है, उसके जीवन में शोक और मोह नहीं रह जाता।\n• **ज्ञानेश्वरी**: 'जैसे लहरें जल से भिन्न नहीं हैं, वैसे ही समस्त प्राणी एक ही परमात्मा के रूप हैं.'",
+          action: "१. जब भी क्रोध का आवेग आए, मौन का सहारा लें और सामने वाले की मजबूरी को समझें।\n२. 'सही साबित होने' की जिद्द छोड़कर सत्य और सौहार्द को प्राथमिकता दें।"
+        }
+      },
+      {
+        id: "money",
+        keywords: ["money", "finance", "wealth", "loss", "debt", "poor", "rich", "पैसा", "संपत्ती", "नुकसान", "कर्ज", "धन", "दौलत", "आर्थिक"],
+        en: {
+          insight: "Advaita does not condemn wealth; it condemns psychological enslavement to it. Possessions belong to the world of forms (*Maya*). True security lies in the self-sufficient nature of consciousness (*Atman*).",
+          source: "• **Isha Upanishad (Verse 1)**: *Tena tyaktena bhunjitha ma gridhah kasya sviddhanam* — Enjoy wealth with a spirit of renunciation; do not covet what belongs to anyone else.\n• **Swami Vivekananda**: 'Wealth is good when it is a means to serve others and conduct life with dignity; it becomes poison the moment it owns your mind.'",
+          action: "1. Act as a faithful custodian or trustee of your resources rather than an insecure possessor.\n2. Work diligently for financial stability, but remember that market fluctuations cannot alter your inner dignity."
+        },
+        mr: {
+          insight: "अद्वैत संपत्तीचा तिरस्कार करत नाही, तर संपत्तीच्या आहारी जाणाऱ्या लोभाला नाकारते. संपत्ती ही जगण्याचे साधन आहे, साध्य नव्हे.",
+          source: "• **ईशोपनिषद**: 'तेन त्यक्तेन भुञ्जीथा मा गृधः कस्यस्विद्धनम्'—त्यागपूर्वक उपभोग घ्या, लोभ धरू नका.\n• **विनोबा भावे**: 'द्रव्य हे नदीच्या प्रवाहासारखे असावे, ते साचले की दुर्गंधी येते. ते समाजकार्यासाठी उपयोगात यावे.'",
+          action: "१. पैशाचा उपयोग कुटुंबाच्या गरजा आणि परोपकारासाठी करा, पण पैशाने स्वतःची किंमत ठरवू नका.\n२. आर्थिक निर्णय घेताना लोभ किंवा भीती ऐवजी विवेक वापरा."
+        },
+        hi: {
+          insight: "धन का अभाव या हानि मनुष्य को विचलित कर देती है क्योंकि वह बाह्य पदार्थों में सुरक्षा ढूंढता है। अद्वैत सिखाता है कि आत्म-संतुष्टि ही सबसे बड़ा धन है।",
+          source: "• **ईशोपनिषद्**: संसार के समस्त पदार्थों का त्याग भाव से उपभोग करो, किसी के धन की लालसा मत करो।\n• **स्वामी विवेकानन्द**: 'धन साधन है, स्वामी नहीं। यदि धन मनुष्य के चरित्र और सेवा में सहायक है, तभी उसका मूल्य है.'",
+          action: "१. पुरुषार्थ करें और उचित धन अर्जित करें, किंतु मन में यह स्पष्ट रखें कि बाह्य संपत्ति आपकी आत्मा को समृद्ध नहीं बनाती।\n२. अनावश्यक चिंता छोड़कर योजनाबद्ध तरीके से कार्य करें।"
+        }
+      },
+      {
+        id: "fear_failure",
+        keywords: ["fear", "fail", "anxiety", "nervous", "scared", "worry", "भीती", "अपयश", "काळजी", "डर", "हार", "चिंता", "घबराहट"],
+        en: {
+          insight: "Fear (*Bhaya*) exists only when you feel separate from the totality of existence. In Advaita, the realization of unity (*Abhayam*) dispels all phantom fears of failure.",
+          source: "• **Brihadaranyaka Upanishad (1.4.2)**: *Dvitiyad vai bhayam bhavati* — Fear arises only from the illusion of duality (the belief that something outside yourself can destroy you).\n• **Swami Vivekananda**: 'Be an unshrinking hero! The only sin is fear, the only weakness is weakness of will.'",
+          action: "1. Remind yourself: An experiment can fail, a project can fail, but *you* are not a failure.\n2. Focus on the integrity of your effort right now. Fear melts in constructive action."
+        },
+        mr: {
+          insight: "भीती आणि चिंता तेव्हाच जन्म घेतात, जेव्हा आपण स्वतःला असहाय्य मानतो. उपनिषदे आपल्याला 'अभय' (भीतीमुक्त) होण्याचा महामंत्र देतात.",
+          source: "• **बृहदारण्यक उपनिषद**: 'द्वितीयाद्वै भयं भवति'—दुसऱ्याचे अस्तित्व मानले की भीती जन्मते. सर्वत्र एकच आत्मतत्त्व आहे हे जाणल्यास भीती उरत नाही.\n• **स्वामी विवेकानंद**: 'निडर व्हा! भीती हेच सर्व दुर्बलतेचे मूळ आहे. स्वतःवर विश्वास ठेवा.'",
+          action: "१. अपयशाच्या भीतीने निर्णय घेणे टाळू नका; प्रयत्न करणे हाच आपला धर्म आहे.\n२. मनातील नकारात्मक विचारांना साक्षीभावाने ओळखा आणि त्यांना महत्त्व देणे बंद करा."
+        },
+        hi: {
+          insight: "असफलता का भय मनुष्य को पंगु बना देता है। उपनिषद कहते हैं कि आत्मा न कभी पराजित होती है, न नष्ट। भय केवल मन की कल्पना में है।",
+          source: "• **बृहदारण्यक उपनिषद्**: जब तक मनुष्य द्वैत (अलगाव) में जीता है, तब तक भय बना रहता है। एकता का बोध ही 'अभय' है।\n• **स्वामी विवेकानन्द**: 'उठो और अपनी अंतर्निहित शक्ति को ललकारो। असफलताएं जीवन का आभूषण हैं, इनसे सीखकर आगे बढ़ो.'",
+          action: "१. भय के विचारों से लड़ें नहीं, बल्कि उन्हें केवल गुजरते हुए बादलों की तरह देखें।\n२. अपने प्रयासों में निष्ठा रखें, परिणाम समय पर छोड़ दें।"
         }
       }
-    };
+    ];
 
     function setLanguage(lang) {
       currentLang = lang;
       ['en', 'mr', 'hi'].forEach(l => {
         const btn = document.getElementById(`btn-${l}`);
-        if(l === lang) {
-          btn.className = "px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition";
-        } else {
-          btn.className = "px-2.5 py-1 rounded text-slate-300 hover:text-white transition";
-        }
+        btn.className = (l === lang)
+          ? "px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold transition"
+          : "px-2 py-0.5 rounded text-slate-300 hover:text-white transition";
       });
 
       const s = UI_STRINGS[lang];
@@ -216,25 +293,17 @@
       document.getElementById('send-btn-label').innerText = s.send;
 
       const pBox = document.getElementById('preset-buttons');
-      pBox.innerHTML = `
-        <button onclick="sendPreset(0)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
-          ${s.presets[0]}
+      pBox.innerHTML = s.presets.map((p, idx) => `
+        <button onclick="sendPreset(${idx})" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          ${p}
         </button>
-        <button onclick="sendPreset(1)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
-          ${s.presets[1]}
-        </button>
-        <button onclick="sendPreset(2)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
-          ${s.presets[2]}
-        </button>
-      `;
+      `).join('');
     }
 
     function appendMessage(role, content) {
       const chat = document.getElementById('chat-messages');
       const div = document.createElement('div');
-      div.className = role === 'user' 
-        ? "flex justify-end" 
-        : "flex justify-start";
+      div.className = role === 'user' ? "flex justify-end" : "flex justify-start";
 
       const bubble = document.createElement('div');
       bubble.className = role === 'user'
@@ -248,12 +317,29 @@
     }
 
     function sendPreset(idx) {
-      const q = UI_STRINGS[currentLang].presets[idx];
+      const q = UI_STRINGS[currentLang].presets[idx].replace(/^[^\w\u0900-\u097F]+/, '');
       document.getElementById('user-input').value = q;
       handleSend();
     }
 
-    function handleSend() {
+    function openKeyModal() { document.getElementById('key-modal').classList.remove('hidden'); }
+    function closeKeyModal() { document.getElementById('key-modal').classList.add('hidden'); }
+    function saveApiKey() {
+      const key = document.getElementById('api-key-input').value.trim();
+      if(key) {
+        localStorage.setItem('lamppost_gemini_key', key);
+        alert('API Key saved! Live AI responses are now active.');
+      }
+      closeKeyModal();
+    }
+    function clearApiKey() {
+      localStorage.removeItem('lamppost_gemini_key');
+      document.getElementById('api-key-input').value = '';
+      alert('API Key cleared. Reverted to built-in wisdom library.');
+      closeKeyModal();
+    }
+
+    async function handleSend() {
       const input = document.getElementById('user-input');
       const text = input.value.trim();
       if(!text) return;
@@ -261,16 +347,61 @@
       appendMessage('user', text);
       input.value = '';
 
-      // Determine appropriate advice topic
-      let topic = 'burnout';
-      const lower = text.toLowerCase();
-      if(lower.includes('fear') || lower.includes('fail') || lower.includes('भीती') || lower.includes('अपयश') || lower.includes('डर') || lower.includes('हार')) {
-        topic = 'failure';
-      } else if(lower.includes('relationship') || lower.includes('ego') || lower.includes('anger') || lower.includes('वाद') || lower.includes('नाते') || lower.includes('रिश्ते') || lower.includes('गुस्सा')) {
-        topic = 'relationships';
+      const apiKey = localStorage.getItem('lamppost_gemini_key');
+
+      // Check if user has connected a live Gemini API Key
+      if (apiKey) {
+        appendMessage('assistant', '<em>🏮 Consulting the timeless texts...</em>');
+        const chat = document.getElementById('chat-messages');
+        const lastMsg = chat.lastElementChild;
+
+        try {
+          const sysPrompt = `You are Lamppost, an empathetic philosophical counselor grounded entirely in Advaita Vedanta (Upanishads, Bhagavad Gita, Sant Dnyaneshwar's Dnyaneshwari, Acharya Vinoba Bhave's Geeta Pravachane, and Swami Vivekananda).
+Resolve the user's personal or professional question with deep psychological clarity, compassionate understanding, an authentic scriptural quote/reference, and 2 practical actions. Respond in ${currentLang === 'mr' ? 'Marathi' : (currentLang === 'hi' ? 'Hindi' : 'English')}.`;
+
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              contents: [{role: 'user', parts: [{text: `${sysPrompt}\n\nUser Question: ${text}`}]}]
+            })
+          });
+
+          const data = await res.json();
+          const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (aiText) {
+            lastMsg.remove();
+            appendMessage('assistant', aiText);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        lastMsg.remove();
       }
 
-      const advice = WISDOM_DATABASE[currentLang][topic];
+      // Offline Wisdom Matcher: Intelligent multi-keyword scoring
+      const lower = text.toLowerCase();
+      let bestDomain = DOMAINS[0];
+      let maxScore = 0;
+
+      for(const d of DOMAINS) {
+        let score = 0;
+        for(const kw of d.keywords) {
+          if(lower.includes(kw.toLowerCase())) score++;
+        }
+        if(score > maxScore) {
+          maxScore = score;
+          bestDomain = d;
+        }
+      }
+
+      // If generic question with no keyword, rotate dynamically
+      if (maxScore === 0) {
+        bestDomain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
+      }
+
+      const advice = bestDomain[currentLang] || bestDomain['en'];
       setTimeout(() => {
         const responseHTML = `
           <div class="text-amber-400 font-semibold text-xs uppercase tracking-wider flex items-center gap-1.5">
@@ -278,7 +409,7 @@
           </div>
           <p class="text-slate-100">${advice.insight}</p>
           <div class="p-2.5 rounded-lg bg-amber-950/20 border-l-2 border-amber-500 text-xs text-amber-200/90 space-y-1">
-            ${advice.citation.replace(/\n/g, '<br>')}
+            ${advice.source.replace(/\n/g, '<br>')}
           </div>
           <div class="text-xs text-slate-300 pt-1">
             <span class="text-amber-400 font-semibold">Practical Guidance:</span><br>
@@ -286,7 +417,7 @@
           </div>
         `;
         appendMessage('assistant', responseHTML);
-      }, 500);
+      }, 400);
     }
   </script>
 </body>
