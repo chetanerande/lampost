@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lamppost | दीपस्तंभ - Advaita Vedanta Guidance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', 'Noto Sans Devanagari', sans-serif; }
+    .bg-twilight { background: radial-gradient(circle at top, #161b33 0%, #0b0d19 100%); }
+    .gold-glow { text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+  </style>
+</head>
+<body class="bg-twilight text-slate-100 min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Header -->
+  <header class="border-b border-amber-900/30 bg-slate-900/80 backdrop-blur sticky top-0 z-20 px-4 py-3">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 to-amber-300 p-0.5 shadow-lg shadow-amber-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-full flex items-center justify-center text-amber-400 font-bold text-lg">
+            🏮
+          </div>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-amber-200 gold-glow" id="app-title">Lamppost</h1>
+          <p class="text-[11px] text-amber-400/80" id="app-tagline">Illuminating Life with Non-Dual Wisdom</p>
+        </div>
+      </div>
+
+      <!-- Language Selector -->
+      <div class="flex items-center space-x-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-xs font-medium">
+        <button onclick="setLanguage('en')" id="btn-en" class="px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition">EN</button>
+        <button onclick="setLanguage('mr')" id="btn-mr" class="px-2.5 py-1 rounded text-slate-300 hover:text-white transition">मराठी</button>
+        <button onclick="setLanguage('hi')" id="btn-hi" class="px-2.5 py-1 rounded text-slate-300 hover:text-white transition">हिन्दी</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Literature Badges Banner -->
+  <div class="bg-amber-950/20 border-b border-amber-900/20 py-1.5 px-4 text-center">
+    <p class="text-[11px] text-amber-300/70 truncate max-w-2xl mx-auto" id="sources-banner">
+      Rooted in: Upanishads • Bhagavad Gita • Dnyaneshwari • Vinoba Bhave • Swami Vivekananda
+    </p>
+  </div>
+
+  <!-- Chat Container -->
+  <main class="flex-1 overflow-y-auto px-4 py-4 max-w-2xl w-full mx-auto space-y-4" id="chat-messages">
+    <!-- Welcome Card -->
+    <div class="bg-slate-900/60 border border-amber-500/20 rounded-2xl p-4 shadow-xl backdrop-blur-sm space-y-3">
+      <div class="flex items-center space-x-2 text-amber-400 font-semibold text-sm">
+        <span>✨</span>
+        <span id="welcome-title">Welcome to Lamppost</span>
+      </div>
+      <p class="text-xs text-slate-300 leading-relaxed" id="welcome-desc">
+        Ask any dilemma—burnout, anxiety, career decisions, difficult leadership moments, or relationship friction. Lamppost shines the light of pure awareness and practical duty without judgment.
+      </p>
+      
+      <!-- Preset Prompt Buttons -->
+      <div class="pt-2 flex flex-wrap gap-2" id="preset-buttons">
+        <button onclick="sendPreset(0)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          💼 Handling workplace burnout & stress
+        </button>
+        <button onclick="sendPreset(1)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          ⚖️ Fear of failure in a new career venture
+        </button>
+        <button onclick="sendPreset(2)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          🤝 Resolving personal relationship conflict
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Input Bar -->
+  <footer class="border-t border-slate-800 bg-slate-950/90 backdrop-blur sticky bottom-0 z-20 px-4 py-3">
+    <div class="max-w-2xl mx-auto flex items-center gap-2">
+      <input 
+        type="text" 
+        id="user-input" 
+        placeholder="Ask a question about life or work..." 
+        class="flex-1 bg-slate-900 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition"
+        onkeydown="if(event.key === 'Enter') handleSend()"
+      >
+      <button 
+        onclick="handleSend()" 
+        class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center text-sm shadow-md shadow-amber-500/10"
+      >
+        <span id="send-btn-label">Ask</span>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    let currentLang = 'en';
+
+    const UI_STRINGS = {
+      en: {
+        title: "Lamppost",
+        tagline: "Illuminating Life with Non-Dual Wisdom",
+        banner: "Rooted in: Upanishads • Bhagavad Gita • Dnyaneshwari • Vinoba Bhave • Swami Vivekananda",
+        welcomeTitle: "Welcome to Lamppost",
+        welcomeDesc: "Bring any question about career, ambition, emotional strain, or personal ethics. Lamppost analyzes your situation through the timeless lens of Advaita Vedanta.",
+        placeholder: "Ask a question about life or work...",
+        send: "Ask",
+        presets: [
+          "How can I handle severe workplace burnout and constant deadlines?",
+          "I have a deep fear of failure regarding a major career risk. What should I do?",
+          "How do I deal with ego clashes and anger in close relationships?"
+        ]
+      },
+      mr: {
+        title: "दीपस्तंभ (Lamppost)",
+        tagline: "अद्वैत वेदांताच्या प्रकाशात जीवनमार्ग",
+        banner: "आधार: उपनिषदे • भगवद्गीता • संत ज्ञानेश्वरांची ज्ञानेश्वरी • विनोबा भावे • स्वामी विवेकानंद",
+        welcomeTitle: "दीपस्तंभावर आपले स्वागत आहे",
+        welcomeDesc: "कामाचा ताण, भीती, नातेसंबंधांमधील वाद किंवा जीवनाचा खरा उद्देश—कोणताही प्रश्न विचारा. अद्वैत विचारांची स्पष्टता आपल्याला मार्ग दाखवेल.",
+        placeholder: "आपला प्रश्न येथे विचारा...",
+        send: "विचारा",
+        presets: [
+          "कामाचा प्रचंड ताण आणि मानसिक थकवा कसा हाताळावा?",
+          "कारकीर्दीत नवीन निर्णय घेताना अपयशाची भीती वाटते, त्यावर काय करावे?",
+          "नातेसंबंधांमधील अहंकार आणि गैरसमज कसे दूर करावेत?"
+        ]
+      },
+      hi: {
+        title: "दीपस्तंभ (Lamppost)",
+        tagline: "अद्वैत वेदान्त के प्रकाश में जीवन मार्गदर्शन",
+        banner: "मूल स्रोत: उपनिषद् • भगवद्गीता • ज्ञानेश्वरी • विनोबा भावे • स्वामी विवेकानन्द",
+        welcomeTitle: "दीपस्तंभ में आपका स्वागत है",
+        welcomeDesc: "कार्यक्षेत्र का तनाव, निर्णय लेने में असमंजस या व्यक्तिगत उलझनें—कोई भी प्रश्न साझा करें। अद्वैत दर्शन आपको निष्काम कर्म और साक्षी भाव की दृष्टि प्रदान करेगा।",
+        placeholder: "अपना प्रश्न यहाँ लिखें...",
+        send: "पूछें",
+        presets: [
+          "कार्यस्थल पर अत्यधिक तनाव और बर्नआउट को कैसे संभालें?",
+          "करियर में नया कदम उठाते समय असफलता का डर कैसे दूर करें?",
+          "रिश्तों में अहंकार के टकराव और अशांति को कैसे शांत करें?"
+        ]
+      }
+    };
+
+    const WISDOM_DATABASE = {
+      en: {
+        burnout: {
+          insight: "In Advaita, your true Self (*Atman*) is the unattached witness (*Sakshi*), not the doer overwhelmed by deadlines. Burnout happens when you identify wholly with the role instead of the consciousness behind it.",
+          citation: "• **Bhagavad Gita (2.47)**: *Karmanyevadhikaraste ma phaleshu kadachana* — Your privilege is only in sincere action, never in the fruits.\n• **Acharya Vinoba Bhave (Geeta Pravachane)**: 'Perform your labor like an artist playing an instrument. The moment labor turns into feverish anxiety for results, energy drains.'",
+          action: "1. Treat your workplace tasks as *Seva* (sacred service), not a trial of your human worth.\n2. Dedicate 5 minutes between meetings to close your eyes and practice being the silent observer of your breath."
+        },
+        failure: {
+          insight: "Fear belongs only to the imagined future of the ego. The Upanishads remind us: *Abhayam* (fearlessness) arises when you realize nothing external can add to or diminish your essential completeness (*Purna*).",
+          citation: "• **Swami Vivekananda**: 'Stand up, be bold, be strong! All the power in the universe is within you. You have covered your eyes and cry that it is dark.'\n• **Sant Dnyaneshwar (Dnyaneshwari, Ch. 18)**: 'The mirror reflects both victory and defeat with equal composure without losing its own nature.'",
+          action: "1. Redefine success: The only failure is shrinking back due to egoic fear. Duty boldly performed is victory in itself.\n2. Focus 100% on preparation today; release tomorrow completely."
+        },
+        relationships: {
+          insight: "Advaita means 'not-two'. Conflict occurs when the ego insists on separateness and winning. When you see the same underlying consciousness in the other person, anger dissolves into understanding.",
+          citation: "• **Isha Upanishad (Verse 6)**: 'He who sees all beings in the Self, and the Self in all beings, feels no hatred.'\n• **Sant Dnyaneshwar**: 'Hatred cannot be subdued by hatred; it melts only when the heart acts like the sun, giving warmth without conditions.'",
+          action: "1. Before responding in anger, pause for three breaths and observe the emotional impulse as an external wave.\n2. Ask yourself: 'Am I defending truth, or am I defending my small ego?'"
+        }
+      },
+      mr: {
+        burnout: {
+          insight: "अद्वैतानुसार तुम्ही केवळ शरीराने किंवा पदाने काम करणारे 'कर्ता' नसून, त्या पलीकडचे शांत 'साक्षी' आहात. जेव्हा आपण कामाच्या परिणामांशी स्वतःची किंमत जोडतो, तेव्हा थकवा येतो.",
+          citation: "• **भगवद्गीता (२.४७)**: 'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन'—केवळ शुद्ध मनाने कर्म करणे हाच आपला अधिकार आहे.\n• **विनोबा भावे (गीता प्रवचने)**: 'कर्मात आसक्ती नसावी. कर्म हे प्रार्थनेसारखे सहज व्हावे, ओझे वाटू नये.'\n• **संत ज्ञानेश्वर (ज्ञानेश्वरी)**: 'कमळाचे पान पाण्यावर राहूनही ओले होत नाही, तसेच संसारात राहून साक्षी राहावे.'",
+          action: "१. कामाचा ताण आला की २ मिनिटे डोळे मिटून विचार करा: 'हे काम माझे कर्तव्य आहे, पण हे काम म्हणजेच माझे संपूर्ण अस्तित्व नव्हे.'\n२. फळाची चिंता न करता कामाच्या प्रक्रियेवर लक्ष केंद्रित करा."
+        },
+        failure: {
+          insight: "अपयशाची भीती केवळ कल्पनेतील अहंकाराला असते. उपनिषद आपल्याला 'अभय' (भीतीमुक्त) होण्याचा संदेश देतात.",
+          citation: "• **स्वामी विवेकानंद**: 'उठा, जागे व्हा आणि ध्येय सिद्ध होईपर्यंत थांबू नका! तुम्ही अनंत शक्तीचे भांडार आहात.'\n• **ज्ञानेश्वरी**: 'ज्याप्रमाणे आकाश वादळामुळे मळत नाही, त्याप्रमाणे आत्म्याची शक्ती कधीही अपयशाने क्षीण होत नाही.'",
+          action: "१. भीती आल्यास स्वतःला सांगा की निर्णय घेणे आणि प्रयत्न करणे हे आपले कर्तव्य आहे; परिणाम नियतीच्या हातात आहे.\n२. अपयशाला अनुभव म्हणून स्वीकारा, स्वतःचा पराभव समजू नका."
+        },
+        relationships: {
+          insight: "अद्वैताचा अर्थ 'दोन नाही ते'. जेव्हा आपण समोरच्या व्यक्तीला स्वतःहून वेगळे मानतो, तेव्हाच राग आणि वैर निर्माण होते.",
+          citation: "• **ईशोपनिषद**: 'जो सर्व प्राण्यांमध्ये स्वतःला आणि स्वतःमध्ये सर्व प्राण्यांना पाहतो, तो कोणाचाही द्वेष करत नाही.'\n• **संत ज्ञानेश्वर (पसायदान)**: 'जे खळांची व्यंकटी सांडो । तया सत्कर्मीं रती वाढो ।'—सर्वांमधील ईश्वरी अंश ओळखून क्षमाशीलता ठेवावी.",
+          action: "१. वादाच्या वेळी ताबडतोब उत्तर न देता आधी समोरच्या व्यक्तीची भूमिका समजून घ्या.\n२. अहंकार जिंकवण्यापेक्षा नाते आणि मानसिक शांतता जपणे महत्त्वाचे माना."
+        }
+      },
+      hi: {
+        burnout: {
+          insight: "अद्वैत वेदान्त सिखाता है कि आप केवल दौड़ते हुए विचार या पद नहीं हैं, बल्कि शांत 'साक्षी स्वरूप' हैं। तनाव तब उत्पन्न होता है जब हम कर्म के फल से अपनी पहचान बांध लेते हैं।",
+          citation: "• **भगवद्गीता (२.४७)**: कर्म पर ही तुम्हारा अधिकार है, फल पर कभी नहीं।\n• **विनोबा भावे (गीता प्रवचन)**: 'कर्म को निष्काम बनाएं; जैसे सूर्य बिना किसी आशा के समस्त जगत को प्रकाश देता है, वैसे ही अपने कर्म को सेवा मानें.'\n• **ज्ञानेश्वरी**: 'पानी में तैरता हुआ कमल पत्र जल से अछूता रहता है, वैसे ही संसार में साक्षी भाव से जिएं.'",
+          action: "१. दिन में दो बार ५ मिनट के लिए मौन रहकर अपनी सांसों को देखें और साक्षी भाव का अभ्यास करें।\n२. काम को बोझ समझने के बजाय उसे अपनी स्वाभाविक योग्यता का अर्पण समझें।"
+        },
+        failure: {
+          insight: "असफलता का भय केवल अहंकार का भ्रम है। उपनिषद हमें 'अभय' का आह्वान करते हैं, क्योंकि आत्म-तत्व कभी घटता या बढ़ता नहीं है।",
+          citation: "• **स्वामी विवेकानन्द**: 'उठो, जागो और तब तक मत रुको जब तक लक्ष्य प्राप्त न हो जाए। समस्त ब्रह्मांड की शक्ति तुम्हारे भीतर है.'\n• **मुण्डक उपनिषद्**: 'सत्यमेव जयते नानृतम्'—सत्य और निष्ठा के मार्ग पर चलने वाले की कभी वास्तविक पराजय नहीं होती।",
+          action: "१. परिणाम की चिंता छोड़कर वर्तमान कर्म में १००% एकाग्रता लगाएं।\n२. विफलता को अंत नहीं, बल्कि सीखने का एक अवसर समझें।"
+        },
+        relationships: {
+          insight: "अद्वैत का अर्थ है 'अभेद'। जब तक हम दूसरे को स्वयं से पृथक देखते हैं, तब तक क्रोध और भय बना रहता है।",
+          citation: "• **ईशोपनिषद्**: 'जो सब भूतों को आत्म-भाव से देखता है, वह किसी से घृणा नहीं करता.'\n• **संत ज्ञानेश्वर**: 'हृदय में करुणा का दीपक जलाएं, अहंकार को मिटाने से ही वास्तविक सामंजस्य सम्भव है.'",
+          action: "१. वाद-विवाद के क्षण में मौन का सहारा लें और अपनी प्रतिक्रिया को थोड़ा विराम दें।\n२. स्वयं से पूछें: 'क्या मैं सत्य की रक्षा कर रहा हूँ या केवल अपने अहंकार की?'"
+        }
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      ['en', 'mr', 'hi'].forEach(l => {
+        const btn = document.getElementById(`btn-${l}`);
+        if(l === lang) {
+          btn.className = "px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-bold transition";
+        } else {
+          btn.className = "px-2.5 py-1 rounded text-slate-300 hover:text-white transition";
+        }
+      });
+
+      const s = UI_STRINGS[lang];
+      document.getElementById('app-title').innerText = s.title;
+      document.getElementById('app-tagline').innerText = s.tagline;
+      document.getElementById('sources-banner').innerText = s.banner;
+      document.getElementById('welcome-title').innerText = s.welcomeTitle;
+      document.getElementById('welcome-desc').innerText = s.welcomeDesc;
+      document.getElementById('user-input').placeholder = s.placeholder;
+      document.getElementById('send-btn-label').innerText = s.send;
+
+      const pBox = document.getElementById('preset-buttons');
+      pBox.innerHTML = `
+        <button onclick="sendPreset(0)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          ${s.presets[0]}
+        </button>
+        <button onclick="sendPreset(1)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          ${s.presets[1]}
+        </button>
+        <button onclick="sendPreset(2)" class="text-[11px] bg-slate-800 hover:bg-amber-900/30 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full transition text-left">
+          ${s.presets[2]}
+        </button>
+      `;
+    }
+
+    function appendMessage(role, content) {
+      const chat = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = role === 'user' 
+        ? "flex justify-end" 
+        : "flex justify-start";
+
+      const bubble = document.createElement('div');
+      bubble.className = role === 'user'
+        ? "bg-amber-600 text-slate-950 font-medium px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[85%] text-sm shadow-md"
+        : "bg-slate-900/90 border border-amber-500/20 text-slate-200 px-4 py-3 rounded-2xl rounded-tl-sm max-w-[90%] text-sm space-y-2.5 shadow-lg backdrop-blur-sm leading-relaxed";
+
+      bubble.innerHTML = content.replace(/\n/g, '<br>');
+      div.appendChild(bubble);
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendPreset(idx) {
+      const q = UI_STRINGS[currentLang].presets[idx];
+      document.getElementById('user-input').value = q;
+      handleSend();
+    }
+
+    function handleSend() {
+      const input = document.getElementById('user-input');
+      const text = input.value.trim();
+      if(!text) return;
+
+      appendMessage('user', text);
+      input.value = '';
+
+      // Determine appropriate advice topic
+      let topic = 'burnout';
+      const lower = text.toLowerCase();
+      if(lower.includes('fear') || lower.includes('fail') || lower.includes('भीती') || lower.includes('अपयश') || lower.includes('डर') || lower.includes('हार')) {
+        topic = 'failure';
+      } else if(lower.includes('relationship') || lower.includes('ego') || lower.includes('anger') || lower.includes('वाद') || lower.includes('नाते') || lower.includes('रिश्ते') || lower.includes('गुस्सा')) {
+        topic = 'relationships';
+      }
+
+      const advice = WISDOM_DATABASE[currentLang][topic];
+      setTimeout(() => {
+        const responseHTML = `
+          <div class="text-amber-400 font-semibold text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <span>🏮</span> Lamppost Counsel
+          </div>
+          <p class="text-slate-100">${advice.insight}</p>
+          <div class="p-2.5 rounded-lg bg-amber-950/20 border-l-2 border-amber-500 text-xs text-amber-200/90 space-y-1">
+            ${advice.citation.replace(/\n/g, '<br>')}
+          </div>
+          <div class="text-xs text-slate-300 pt-1">
+            <span class="text-amber-400 font-semibold">Practical Guidance:</span><br>
+            ${advice.action.replace(/\n/g, '<br>')}
+          </div>
+        `;
+        appendMessage('assistant', responseHTML);
+      }, 500);
+    }
+  </script>
+</body>
+</html>
